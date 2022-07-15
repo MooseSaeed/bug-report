@@ -41,5 +41,7 @@ You should get redirected to the new route with the subdomain `{user_id}.example
 
 -   You get redirected to a wrong url `example.test/{product_slug}` and the subdomain gets completely ignored.
 -   The page contains your product but on refresh it shows 404 and when you manually type the route url in the browser (for example: `1.example.test/product-one`) You find your route working with the correct product.
+- Even if you use `return redirect()->to($fullUrl);` it will redirect you to a url that ignores completely the subdomain part in the url.
+- The only way you can work this out is using `return Inertia::render($url)` but this causes a complete page refresh.
 
 ![Laravel-bug](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/upf75jcfjdjbfy4jg31m.gif)
