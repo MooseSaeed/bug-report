@@ -1,17 +1,29 @@
 ## Steps to Reproduce
 
 1- Install Laravel.
+
 2- `composer require laravel/jetstream`
+
 3- `php artisan jetstream:install inertia --teams`
+
 4- `php artisan jetstream:install inertia --ssr`
+
 5- `npm install`
+
 6- Create MySQL database (bug_report) and connect in .env
+
 7- `php artisan migrate:fresh`
+
 8- make Product model with migration (name & slug)
+
 9- User hasMany products - Product belongsTo user.
+
 10- Make a form and routes to submit a product at `resources/js/Pages/Welcome.vue` and redirect to ProductShow
+
 11- `php artisan serve --host example.test --port 80`
+
 12- `npm run dev`
+
 13- Register - got to example.test - submit the form
 You will encounter CORS errors.
 
