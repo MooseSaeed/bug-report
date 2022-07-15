@@ -1,64 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Steps to Reproduce
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+1- Install Laravel.
 
-## About Laravel
+2- `composer require laravel/jetstream`
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+3- `php artisan jetstream:install inertia --teams`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+4- `php artisan jetstream:install inertia --ssr`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+5- `npm install`
 
-## Learning Laravel
+6- Create MySQL database (bug_report) and connect in .env
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+7- `php artisan migrate:fresh`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+8- make Product model with migration (name & slug)
 
-## Laravel Sponsors
+9- User hasMany products - Product belongsTo user.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+10- Make a form and routes to submit a product at `resources/js/Pages/Welcome.vue` and redirect to ProductShow
 
-### Premium Partners
+11- `php artisan serve --host example.test --port 80`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+12- `npm run dev`
 
-## Contributing
+13- Register a new account -> head to example.test -> submit the form
+You will encounter CORS errors.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+Access to XMLHttpRequest at 'http://1.example.test/product-one' (redirected from 'http://example.test/products/create') from origin 'http://example.test' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
 
-## Code of Conduct
+You can fix them by making those changes -> https://github.com/laravel/jetstream/pull/1090
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+14- add '*' to path and `'x-inertia'` to exposed headers at cors.php and submit the form again.
 
-## Security Vulnerabilities
+## Expected behavior
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+You should get redirected to the new route with the subdomain `{user_id}.example.test/{product_slug}`
 
-## License
+## Current behavior
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   You get redirected to a wrong url `example.test/{product_slug}` and the subdomain gets completely ignored.
+-   The page contains your product but on refresh it shows 404 and when you manually type the route url in the browser (for example: `1.example.test/product-one`) You find your route working with the correct product.
+- Even if you use `return redirect()->to($fullUrl);` it will redirect you to a url that ignores completely the subdomain part in the url.
+- The only way you can work this out is using `return Inertia::render($url)` but this causes a complete page refresh.
+
+![Laravel-bug](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/upf75jcfjdjbfy4jg31m.gif)
