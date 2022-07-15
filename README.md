@@ -24,14 +24,16 @@
 
 12- `npm run dev`
 
-13- Register - got to example.test - submit the form
+13- Register a new account -> head to example.test -> submit the form
 You will encounter CORS errors.
 
 ```
 Access to XMLHttpRequest at 'http://1.example.test/product-one' (redirected from 'http://example.test/products/create') from origin 'http://example.test' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
-14- add '\*' to path and `'x-inertia'` to exposed headers at cors.php and submit the form again.
+You can fix them by making those changes -> https://github.com/laravel/jetstream/pull/1090
+
+14- add '*' to path and `'x-inertia'` to exposed headers at cors.php and submit the form again.
 
 ## Expected behavior
 
