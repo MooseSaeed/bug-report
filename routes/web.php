@@ -20,7 +20,7 @@ use Inertia\Inertia;
 //Route to show the product with subdomain
 Route::domain('{id}.example.test')->group(function () {
     Route::get('{slug}', function () {
-        Inertia::render('ProductShow');
+        return Inertia::render('ProductShow');
     })->name('products.show');
 });
 
