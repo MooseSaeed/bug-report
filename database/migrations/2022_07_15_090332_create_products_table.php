@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('name');
-            $table->slug('slug');
+            $table->string('slug');
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 use App\Models\Product;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
